@@ -59,7 +59,7 @@ function Organize() {
     try {
       await uploadBytes(imageRef, imageUpload);
       const downloadURL = await getDownloadURL(imageRef);
-      setImageURL(downloadURL); 
+      setImageURL(downloadURL);
       alert("Image Uploaded Successfully.");
     } catch (error) {
       console.error("Error uploading image:", error);
@@ -104,12 +104,12 @@ function Organize() {
         const itemDocRef = doc(db, "PantryID", updating);
         await updateDoc(itemDocRef, {
           name,
-          date: startDate ? startDate.toISOString() : "", 
+          date: startDate ? startDate.toISOString() : "",
           quantity,
           price,
           category,
           location,
-          imageUrl, 
+          imageUrl,
         });
 
         setList((prevList) =>
@@ -118,12 +118,12 @@ function Organize() {
               ? {
                   id: updating,
                   name,
-                  date: startDate ? startDate.toISOString() : "", 
+                  date: startDate ? startDate.toISOString() : "",
                   quantity,
                   price,
                   category,
                   location,
-                  imageUrl, 
+                  imageUrl,
                 }
               : item
           )
@@ -140,7 +140,7 @@ function Organize() {
           price,
           category,
           location,
-          imageUrl, 
+          imageUrl,
         });
 
         setList((prevList) => [
@@ -153,7 +153,7 @@ function Organize() {
             price,
             category,
             location,
-            imageUrl, 
+            imageUrl,
           },
         ]);
         setTimeout(() => {
@@ -167,7 +167,7 @@ function Organize() {
       setPrice(0);
       setCategory("");
       setLocation("");
-      setImageUpload(null); 
+      setImageUpload(null);
       setImageURL(null);
     } catch (err) {
       console.log(err);
@@ -200,13 +200,13 @@ function Organize() {
     setClicked(!clicked);
   };
 
+  const apiKey = import.meta.env.VITE_API_KEY;
+
   const handleShowRecipe = async () => {
     setLoading(true); // Start loading
 
     try {
-      const genAI = new GoogleGenerativeAI(
-        "AIzaSyBBgDpoBsoJLeYxUQ8JZTnSHKctCr_3EpU"
-      );
+      const genAI = new GoogleGenerativeAI(apiKey);
       const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
 
       // Combine the names of all items in the list
@@ -241,7 +241,7 @@ function Organize() {
     setLoading(true);
     try {
       const genAI = new GoogleGenerativeAI(
-        "AIzaSyBBgDpoBsoJLeYxUQ8JZTnSHKctCr_3EpU"
+        apiKey
       );
       const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
 
