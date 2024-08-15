@@ -20,7 +20,7 @@ import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
 
 // IMAGE
 import homeImage from "./assets/thanksgiving-8335322.jpg";
-// Make sure to include these imports:
+// Google text completion provider import:
 import { GoogleGenerativeAI } from "@google/generative-ai";
 
 function Organize() {
@@ -59,7 +59,7 @@ function Organize() {
     try {
       await uploadBytes(imageRef, imageUpload);
       const downloadURL = await getDownloadURL(imageRef);
-      setImageURL(downloadURL); // Store the download URL in the state
+      setImageURL(downloadURL); 
       alert("Image Uploaded Successfully.");
     } catch (error) {
       console.error("Error uploading image:", error);
@@ -104,12 +104,12 @@ function Organize() {
         const itemDocRef = doc(db, "PantryID", updating);
         await updateDoc(itemDocRef, {
           name,
-          date: startDate ? startDate.toISOString() : "", // Save date as ISO string
+          date: startDate ? startDate.toISOString() : "", 
           quantity,
           price,
           category,
           location,
-          imageUrl, // Store the image URL in Firestore
+          imageUrl, 
         });
 
         setList((prevList) =>
@@ -118,12 +118,12 @@ function Organize() {
               ? {
                   id: updating,
                   name,
-                  date: startDate ? startDate.toISOString() : "", // Save date as ISO string
+                  date: startDate ? startDate.toISOString() : "", 
                   quantity,
                   price,
                   category,
                   location,
-                  imageUrl, // Update the local state with the image URL
+                  imageUrl, 
                 }
               : item
           )
@@ -135,12 +135,12 @@ function Organize() {
       } else {
         const docRef = await addDoc(itemsCollectionRef, {
           name,
-          date: startDate ? startDate.toISOString() : "", // Save date as ISO string
+          date: startDate ? startDate.toISOString() : "",
           quantity,
           price,
           category,
           location,
-          imageUrl, // Store the image URL in Firestore
+          imageUrl, 
         });
 
         setList((prevList) => [
@@ -153,7 +153,7 @@ function Organize() {
             price,
             category,
             location,
-            imageUrl, // Add the new item with the image URL
+            imageUrl, 
           },
         ]);
         setTimeout(() => {
@@ -167,7 +167,7 @@ function Organize() {
       setPrice(0);
       setCategory("");
       setLocation("");
-      setImageUpload(null); // Clear the image upload state
+      setImageUpload(null); 
       setImageURL(null);
     } catch (err) {
       console.log(err);
