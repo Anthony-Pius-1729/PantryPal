@@ -10,6 +10,7 @@ import { db } from "./config/firebase";
 import {
   collection,
   getDocs,
+  getDoc,
   addDoc,
   deleteDoc,
   doc,
@@ -90,7 +91,9 @@ function Organize() {
     setHeight(true);
     const itemsCollectionRef = collection(db, "PantryID");
 
-    let imageUrl = "";
+    let imageUrl = imageUpload ? "" : null; // Default to empty if new image is uploaded, null if not.
+
+    // Upload the new image if provided
     if (imageUpload) {
       const imageRef = ref(storage, `images/${imageUpload.name + v4()}`);
       await uploadBytes(imageRef, imageUpload);
@@ -100,8 +103,15 @@ function Organize() {
 
     try {
       if (updating) {
-        setLoading(true);
         const itemDocRef = doc(db, "PantryID", updating);
+        const itemDoc = await getDoc(itemDocRef);
+        const currentItem = itemDoc.data();
+
+        // Use the existing imageUrl if no new image was uploaded
+        if (!imageUpload) {
+          imageUrl = currentItem.imageUrl;
+        }
+
         await updateDoc(itemDocRef, {
           name,
           date: startDate ? startDate.toISOString() : "",
@@ -109,7 +119,7 @@ function Organize() {
           price,
           category,
           location,
-          imageUrl,
+          imageUrl, // Will use new or existing imageUrl based on the logic above
         });
 
         setList((prevList) =>
@@ -128,6 +138,7 @@ function Organize() {
               : item
           )
         );
+
         setTimeout(() => {
           setLoading(false);
         }, 3000);
@@ -148,7 +159,7 @@ function Organize() {
           {
             id: docRef.id,
             name,
-            date: startDate ? startDate.toISOString() : "", // Save date as ISO string
+            date: startDate ? startDate.toISOString() : "",
             quantity,
             price,
             category,
@@ -156,11 +167,13 @@ function Organize() {
             imageUrl,
           },
         ]);
+
         setTimeout(() => {
           setLoading(false);
         }, 2000);
       }
 
+      // Reset form fields
       setName("");
       setStartDate("");
       setQuantity(0);
@@ -173,6 +186,7 @@ function Organize() {
       console.log(err);
     }
   };
+
 
   const handleDeleteItem = async (id) => {
     const pantryDoc = doc(db, "PantryID", id);
